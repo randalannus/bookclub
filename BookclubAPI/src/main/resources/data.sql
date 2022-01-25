@@ -1,0 +1,1 @@
+INSERT INTO books (book_name, description) VALUES ('The Promised Land', 'This is a book');
