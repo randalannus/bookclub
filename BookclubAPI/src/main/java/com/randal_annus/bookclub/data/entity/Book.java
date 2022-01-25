@@ -6,9 +6,9 @@ import javax.persistence.*;
 @Table(name = "books")
 public class Book {
     @Id
-    @Column(name = "book_id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long bookId;
+    @Column(name = "book_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long bookId;
     @Column(name = "author_id")
     private Long authorId;
     @Column(name = "book_name")
@@ -16,12 +16,12 @@ public class Book {
     @Column(name = "description")
     private String description;
 
-    public long getBookId() {
-        return bookId;
+    public void setBookId(Long bookId) {
+        this.bookId = bookId;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
+    public Long getBookId() {
+        return bookId;
     }
 
     public Long getAuthorId() {
