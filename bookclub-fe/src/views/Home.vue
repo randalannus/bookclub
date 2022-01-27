@@ -1,17 +1,27 @@
 <template>
   <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <book-list :books="books" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import BookList from '@/components/BookList'
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    BookList
+  },
+  data: function () {
+    return {
+      books: []
+    }
+  },
+  created: function () {
+    fetch('http://localhost:8080/books')
+      .then(response => response.json())
+      .then(data => (this.books = data))
   }
 }
 </script>
