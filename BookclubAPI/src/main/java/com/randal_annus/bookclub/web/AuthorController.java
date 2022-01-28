@@ -1,6 +1,7 @@
 package com.randal_annus.bookclub.web;
 
 import com.randal_annus.bookclub.business.model.AuthorInfo;
+import com.randal_annus.bookclub.business.model.BookInfo;
 import com.randal_annus.bookclub.business.service.LiteratureService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,15 @@ public class AuthorController {
     public ResponseEntity<AuthorInfo> getAuthor(@PathVariable long authorId) {
         try {
             return ResponseEntity.ok(literatureService.findAuthorById(authorId));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/authors/{authorId}/books")
+    public ResponseEntity<List<BookInfo>> getBooksByAuthor(@PathVariable long authorId) {
+        try {
+            return ResponseEntity.ok(literatureService.findBooksByAuthor(authorId));
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }

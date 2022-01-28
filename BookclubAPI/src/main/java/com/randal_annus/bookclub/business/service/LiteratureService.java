@@ -40,7 +40,8 @@ public class LiteratureService {
     }
 
     @Transactional
-    public List<BookInfo> findBooksByAuthor(long authorId) {
+    public List<BookInfo> findBooksByAuthor(long authorId) throws NoSuchElementException {
+        if (!authorRepository.existsByAuthorId(authorId)) throw new NoSuchElementException();
         var bookInfos = bookRepository.findByAuthorId(authorId).stream().map(BookInfo::new).toList();
         fillAuthorDetails(bookInfos);
         return bookInfos;
