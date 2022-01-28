@@ -1,7 +1,7 @@
 package com.randal_annus.bookclub.web;
 
+import com.randal_annus.bookclub.business.model.BookInfo;
 import com.randal_annus.bookclub.business.service.BookService;
-import com.randal_annus.bookclub.data.entity.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,29 +17,29 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public List<Book> getBooks() {
+    public List<BookInfo> getBooks() {
         return bookService.findAll();
     }
 
     @GetMapping("/books/{bookId}")
-    public Book getBook(@PathVariable long bookId) {
+    public BookInfo getBook(@PathVariable long bookId) {
         return bookService.findById(bookId);
     }
 
     @PostMapping("/books")
-    public ResponseEntity<Book> createBook(@RequestBody Book book) {
-        bookService.create(book);
-        return ResponseEntity.ok(book);
+    public ResponseEntity<BookInfo> createBook(@RequestBody BookInfo bookInfo) {
+        bookService.create(bookInfo);
+        return ResponseEntity.ok(bookInfo);
     }
 
     @PutMapping("/books")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book) {
+    public ResponseEntity<BookInfo> updateBook(@RequestBody BookInfo bookInfo) {
         try {
-            bookService.update(book);
+            bookService.update(bookInfo);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(book);
+        return ResponseEntity.ok(bookInfo);
     }
 
     @DeleteMapping("books/{bookId}")
