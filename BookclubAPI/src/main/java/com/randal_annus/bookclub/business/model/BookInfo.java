@@ -19,7 +19,7 @@ public class BookInfo {
 
     public BookInfo(Book book) {
         this.bookId = book.getBookId();
-        this.authorId = null;
+        this.authorId = book.getAuthorId();
         this.authorName = null;
         this.title = book.getTitle();
         this.description = book.getDescription();
