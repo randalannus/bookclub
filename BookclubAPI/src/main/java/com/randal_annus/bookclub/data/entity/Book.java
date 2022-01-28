@@ -11,8 +11,8 @@ public class Book {
     private Long bookId;
     @Column(name = "author_id")
     private Long authorId;
-    @Column(name = "book_name")
-    private String bookName;
+    @Column(name = "title")
+    private String title;
     @Column(name = "description")
     private String description;
 
@@ -32,12 +32,12 @@ public class Book {
         this.authorId = authorId;
     }
 
-    public String getBookName() {
-        return bookName;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

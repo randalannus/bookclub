@@ -21,7 +21,7 @@ public class BookInfo {
         this.bookId = book.getBookId();
         this.authorId = null;
         this.authorName = null;
-        this.title = book.getBookName();
+        this.title = book.getTitle();
         this.description = book.getDescription();
     }
 
@@ -33,7 +33,7 @@ public class BookInfo {
         var book = new Book();
         book.setBookId(this.bookId);
         book.setAuthorId(this.authorId);
-        book.setBookName(this.title);
+        book.setTitle(this.title);
         book.setDescription(this.description);
         return book;
     }
