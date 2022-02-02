@@ -1,6 +1,12 @@
 <template>
-  <menu-bar />
-  <router-view />
+  <q-layout view="hHh lpr fFf">
+    <menu-bar />
+    <q-page-container>
+      <q-page padding class="content">
+        <router-view />
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script>
@@ -12,4 +18,9 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style scoped>
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+</style>

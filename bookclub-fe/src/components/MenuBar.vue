@@ -14,9 +14,13 @@
 export default {}
 </script>
 
-<style>
+<style scoped>
 a {
   color: inherit;
   text-decoration: inherit;
+}
+* {
+  background-color: #ff9f1c;
+  color: #fff;
 }
 </style>

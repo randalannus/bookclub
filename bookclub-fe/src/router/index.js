@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import BrowseBooks from '../views/BrowseBooks.vue'
+import BookView from '../views/BookView.vue'
 
 const routes = [
   {
@@ -11,6 +12,12 @@ const routes = [
     path: '/books',
     name: 'Books',
     component: BrowseBooks
+  },
+  {
+    path: '/books/:bookId',
+    name: 'Book',
+    component: BookView,
+    props: true
   }
 ]
 

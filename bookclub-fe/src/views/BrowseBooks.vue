@@ -3,7 +3,7 @@
     <div class="col col-2">
       <q-card> Filters </q-card>
     </div>
-    <div class="col-6">
+    <div class="col col-grow">
       <book-list :books="books" />
     </div>
   </div>
@@ -13,7 +13,7 @@
 import BookList from '@/components/BookList'
 
 export default {
-  name: 'Home',
+  name: 'BrowseBooks',
   components: {
     BookList
   },
@@ -23,9 +23,10 @@ export default {
     }
   },
   created: function () {
-    fetch('http://localhost:8080/books')
-      .then(response => response.json())
-      .then(data => (this.books = data))
+    this.axios
+      .get(this.bcBaseUrl + '/books')
+      .then(response => (this.books = response.data))
   }
 }
 </script>
+<style></style>
