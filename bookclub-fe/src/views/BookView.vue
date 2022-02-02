@@ -9,7 +9,17 @@
       </template>
       <template v-else>
         <div class="text-h2">{{ book.title }}</div>
-        <div class="text-subtitle2">by {{ authorName }}</div>
+        <div class="text-subtitle2">
+          by
+          <router-link
+            v-if="book.authorId"
+            :to="'/authors/' + book.authorId"
+            @click.stop
+            class="text-subtitle2"
+            >{{ authorName }}</router-link
+          >
+          <template v-else>{{ authorName }}</template>
+        </div>
         <div class="text-body2">{{ book.description }}</div>
       </template>
     </div>
@@ -52,5 +62,8 @@ export default {
   color: grey;
   padding-top: 10px;
   padding-bottom: 20px;
+}
+a:hover {
+  color: #2ec4b6;
 }
 </style>

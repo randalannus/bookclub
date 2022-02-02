@@ -4,13 +4,11 @@
       <q-card> Filters </q-card>
     </div>
     <div class="col-grow">
-      <div class="column items-stretch">
-        <template v-for="book in books" :key="book.bookId">
-          <div class="col">
-            <book-card :book="book"></book-card>
-          </div>
-        </template>
-      </div>
+      <book-card
+        v-for="book in books"
+        :key="book.bookId"
+        :book="book"
+      ></book-card>
     </div>
   </div>
 </template>

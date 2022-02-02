@@ -24,10 +24,8 @@
       </div>
     </div>
     <div class="text-h5">Books by {{ authorName }}</div>
-    <div class="column items-stretch">
-      <div v-for="book in books" :key="book.bookId" class="col">
-        <book-card :book="book"></book-card>
-      </div>
+    <div class="col">
+      <book-card v-for="book in books" :key="book.bookId" :book="book" />
     </div>
   </div>
 </template>

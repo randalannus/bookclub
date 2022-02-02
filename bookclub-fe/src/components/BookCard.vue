@@ -13,7 +13,7 @@
             :src="url"
             spinner-color="black"
             fit="scale-down"
-            img-class="my-custom-image"
+            class="my-custom-image"
           />
         </div>
       </div>
@@ -21,7 +21,17 @@
       <div class="col-grow">
         <q-card-section class="card-height">
           <div class="text-h6">{{ book.title }}</div>
-          <div class="text-subtitle2">by {{ authorName }}</div>
+          <div class="text-subtitle2">
+            by
+            <router-link
+              v-if="book.authorId"
+              :to="'/authors/' + book.authorId"
+              @click.stop
+              class="text-subtitle2"
+              >{{ authorName }}</router-link
+            >
+            <template v-else>{{ authorName }}</template>
+          </div>
           <div class="text-body2">{{ book.description }}</div>
         </q-card-section>
       </div>
@@ -61,12 +71,14 @@ export default {
   height: 15em;
 }
 .my-custom-image {
-  display: block;
   box-sizing: border-box;
   max-height: 13em;
 }
 #img-padding {
   padding: 1em;
   max-height: 15em;
+}
+a:hover {
+  color: #2ec4b6;
 }
 </style>
