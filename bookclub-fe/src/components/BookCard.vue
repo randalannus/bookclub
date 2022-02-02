@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     authorName() {
-      return Utils.authorName(this.book)
+      return Utils.formatAuthorName(this.book.authorId, this.book.authorName)
     }
   },
   methods: {

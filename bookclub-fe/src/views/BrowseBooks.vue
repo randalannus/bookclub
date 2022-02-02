@@ -3,19 +3,25 @@
     <div class="col col-2">
       <q-card> Filters </q-card>
     </div>
-    <div class="col col-grow">
-      <book-list :books="books" />
+    <div class="col-grow">
+      <div class="column items-stretch">
+        <template v-for="book in books" :key="book.bookId">
+          <div class="col">
+            <book-card :book="book"></book-card>
+          </div>
+        </template>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BookList from '@/components/BookList'
+import BookCard from '@/components/BookCard'
 
 export default {
   name: 'BrowseBooks',
   components: {
-    BookList
+    BookCard
   },
   data: function () {
     return {
