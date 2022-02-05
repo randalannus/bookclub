@@ -1,8 +1,8 @@
 package com.randal_annus.bookclub.web;
 
-import com.randal_annus.bookclub.business.model.AuthorInfo;
-import com.randal_annus.bookclub.business.model.BookInfo;
 import com.randal_annus.bookclub.business.service.LiteratureService;
+import com.randal_annus.bookclub.data.entity.Author;
+import com.randal_annus.bookclub.data.entity.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,12 +18,12 @@ public class AuthorController {
     }
 
     @GetMapping("/authors")
-    public List<AuthorInfo> getAllAuthors() {
+    public Iterable<Author> getAllAuthors() {
         return literatureService.findAllAuthors();
     }
 
     @GetMapping("/authors/{authorId}")
-    public ResponseEntity<AuthorInfo> getAuthor(@PathVariable long authorId) {
+    public ResponseEntity<Author> getAuthor(@PathVariable long authorId) {
         try {
             return ResponseEntity.ok(literatureService.findAuthorById(authorId));
         } catch (NoSuchElementException e) {
@@ -32,7 +32,7 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{authorId}/books")
-    public ResponseEntity<List<BookInfo>> getBooksByAuthor(@PathVariable long authorId) {
+    public ResponseEntity<Iterable<Book>> getBooksByAuthor(@PathVariable long authorId) {
         try {
             return ResponseEntity.ok(literatureService.findBooksByAuthor(authorId));
         } catch (NoSuchElementException e) {
@@ -41,21 +41,21 @@ public class AuthorController {
     }
 
     @PostMapping("/authors")
-    public ResponseEntity<AuthorInfo> createAuthor(@RequestBody AuthorInfo authorInfo) {
-        authorInfo = literatureService.createAuthor(authorInfo);
-        return ResponseEntity.ok(authorInfo);
+    public ResponseEntity<Author> createAuthor(@RequestBody Author author) {
+        literatureService.createAuthor(author);
+        return ResponseEntity.ok(author);
     }
 
     @PutMapping("/authors")
-    public ResponseEntity<AuthorInfo> updateAuthor(@RequestBody AuthorInfo authorInfo) {
+    public ResponseEntity<Author> updateAuthor(@RequestBody Author author) {
         try {
-            literatureService.updateAuthor(authorInfo);
+            literatureService.updateAuthor(author);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(authorInfo);
+        return ResponseEntity.ok(author);
     }
 
     @DeleteMapping("authors/{authorId}")

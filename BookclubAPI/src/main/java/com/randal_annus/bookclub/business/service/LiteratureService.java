@@ -1,7 +1,5 @@
 package com.randal_annus.bookclub.business.service;
 
-import com.randal_annus.bookclub.business.model.AuthorInfo;
-import com.randal_annus.bookclub.business.model.BookInfo;
 import com.randal_annus.bookclub.data.entity.Author;
 import com.randal_annus.bookclub.data.entity.Book;
 import com.randal_annus.bookclub.data.repository.AuthorRepository;
@@ -22,58 +20,46 @@ public class LiteratureService {
         this.authorRepository = authorRepository;
     }
 
-    @Transactional(readOnly = true)
-    public List<BookInfo> findAllBooks() {
-        var bookInfos = new ArrayList<BookInfo>();
-        bookRepository.findAll().forEach(book -> bookInfos.add(new BookInfo(book)));
-        fillAuthorDetails(bookInfos);
-        return bookInfos;
+    public Iterable<Book> findAllBooks() {
+        return bookRepository.findAll();
     }
 
     @Transactional(readOnly = true)
-    public BookInfo findBookById(long bookId) throws NoSuchElementException {
+    public Book findBookById(long bookId) throws NoSuchElementException {
         Optional<Book> optional = bookRepository.findById(bookId);
         if (optional.isEmpty()) throw new NoSuchElementException();
-        var bookInfo = new BookInfo(optional.get());
-        fillAuthorDetails(bookInfo);
-        return bookInfo;
+        return optional.get();
     }
 
     @Transactional
-    public List<BookInfo> findBooksByAuthor(long authorId) throws NoSuchElementException {
+    public Iterable<Book> findBooksByAuthor(long authorId) throws NoSuchElementException {
         if (!authorRepository.existsByAuthorId(authorId)) throw new NoSuchElementException();
-        var bookInfos = bookRepository.findByAuthorId(authorId).stream().map(BookInfo::new).toList();
-        fillAuthorDetails(bookInfos);
-        return bookInfos;
+        return bookRepository.findByAuthor_AuthorId(authorId);
     }
 
     /**
      * Create a new book resource.
-     * The {@code bookId} field of the provided {@link BookInfo} is ignored.
-     * @param bookInfo a book.
-     * @return the created book with an {@code id} field.
+     * The {@code bookId} field of the book is ignored and a new value is generated for it.
+     * @param book a book.
      */
     @Transactional
-    public BookInfo createBook(BookInfo bookInfo) {
-        bookInfo.setBookId(null);
-        var book = bookInfo.toBook();
+    public void createBook(Book book) {
+        book.setBookId(null);
         bookRepository.save(book);
-        bookInfo = new BookInfo(book);
-        fillAuthorDetails(bookInfo);
-        return bookInfo;
     }
 
     /**
      * Update an existing book resource.
-     * @param bookInfo a book to be updated.
+     * @param book a book to be updated.
      * @throws NoSuchElementException If a book resource with the {@code bookId} does not exist.
+     * @throws IllegalArgumentException If the bookId is {@code null}.
      */
     @Transactional
-    public void updateBook(BookInfo bookInfo) throws NoSuchElementException {
-        if (bookInfo.getBookId() == null) throw new IllegalArgumentException();
-        var optional = bookRepository.findById(bookInfo.getBookId());
+    public void updateBook(Book book) throws NoSuchElementException {
+        if (book.getBookId() == null) throw new IllegalArgumentException();
+        Optional<Book> optional = bookRepository.findById(book.getBookId());
         if (optional.isEmpty()) throw new NoSuchElementException();
-        bookRepository.save(bookInfo.toBook());
+        bookRepository.save(book);
     }
 
     /**
@@ -90,53 +76,46 @@ public class LiteratureService {
     }
 
     @Transactional(readOnly = true)
-    public List<AuthorInfo> findAllAuthors() {
-        var authorInfos = new ArrayList<AuthorInfo>();
-        authorRepository.findAll().forEach(author -> authorInfos.add(new AuthorInfo(author)));
-        return authorInfos;
+    public Iterable<Author> findAllAuthors() {
+        return authorRepository.findAll();
     }
 
-    public AuthorInfo findAuthorById(long authorId) throws NoSuchElementException {
+    public Author findAuthorById(long authorId) throws NoSuchElementException {
         Optional<Author> optional = authorRepository.findById(authorId);
-        if (optional.isPresent()) {
-            return new AuthorInfo(optional.get());
+        if (optional.isEmpty()) {
+            throw new NoSuchElementException();
         }
-        throw new NoSuchElementException();
+        return optional.get();
     }
 
     @Transactional
-    public List<AuthorInfo> findAuthorsByIds(Iterable<Long> authorIds) {
-        Iterable<Author> authors = authorRepository.findAllById(authorIds);
-        var authorInfos = new ArrayList<AuthorInfo>();
-        authors.forEach(author -> authorInfos.add(new AuthorInfo(author)));
-        return authorInfos;
+    public Iterable<Author> findAuthorsByIds(Iterable<Long> authorIds) {
+        return authorRepository.findAllById(authorIds);
     }
 
     /**
      * Create a new author resource.
-     * The {@code authorId} field of the provided {@link AuthorInfo} is ignored.
-     * @param authorInfo an author.
-     * @return the created author with an {@code id} field.
+     * The {@code authorId} field is ignored and a new id is generated.
+     * @param author an author.
      */
     @Transactional
-    public AuthorInfo createAuthor(AuthorInfo authorInfo) {
-        authorInfo.setAuthorId(null);
-        var author = authorInfo.toAuthor();
+    public void createAuthor(Author author) {
+        author.setAuthorId(null);
         authorRepository.save(author);
-        return new AuthorInfo(author);
     }
 
     /**
      * Update an existing author resource.
-     * @param authorInfo the author to be updated.
+     * @param author the author to be updated.
      * @throws NoSuchElementException If an author resource with the {@code bookId} does not exist.
+     * @throws IllegalArgumentException If the authorId is {@code null}.
      */
     @Transactional
-    public void updateAuthor(AuthorInfo authorInfo) throws NoSuchElementException {
-        if (authorInfo.getAuthorId() == null) throw new IllegalArgumentException();
-        var optional = authorRepository.findById(authorInfo.getAuthorId());
+    public void updateAuthor(Author author) throws NoSuchElementException {
+        if (author.getAuthorId() == null) throw new IllegalArgumentException();
+        var optional = authorRepository.findById(author.getAuthorId());
         if (optional.isEmpty()) throw new NoSuchElementException();
-        authorRepository.save(authorInfo.toAuthor());
+        authorRepository.save(author);
     }
 
     /**
@@ -149,41 +128,6 @@ public class LiteratureService {
             authorRepository.deleteById(authorId);
         } catch (EmptyResultDataAccessException e) {
             throw new NoSuchElementException();
-        }
-    }
-
-    /**
-     * See {@link #fillAuthorDetails(Iterable, Iterable) fillAuthorDetails(bookInfos, authorInfos)}.
-     * Looks up the author if the book has an authorId.
-     */
-    private void fillAuthorDetails(BookInfo bookInfo) {
-        fillAuthorDetails(Set.of(bookInfo));
-    }
-
-    /**
-     * See {@link #fillAuthorDetails(Iterable, Iterable) fillAuthorDetails(bookInfos, authorInfos)}.
-     * Looks up the authors for all books that have authorIds.
-     */
-    private void fillAuthorDetails(Iterable<BookInfo> bookInfos) {
-        var authorIds = new HashSet<Long>();
-        bookInfos.forEach(bookInfo -> authorIds.add(bookInfo.getAuthorId()));
-        fillAuthorDetails(bookInfos, findAuthorsByIds(authorIds));
-    }
-
-    /**
-     * Sets the author name for each book.
-     * Author name is only set if the corresponding author is found in {@code authorInfos}.
-     * @param bookInfos books that need author details.
-     * @param authorInfos authors of the books.
-     */
-    private void fillAuthorDetails(Iterable<BookInfo> bookInfos, Iterable<AuthorInfo> authorInfos) {
-        var nameLookup = new HashMap<Long, String>();
-        authorInfos.forEach(ai -> nameLookup.put(ai.getAuthorId(), ai.getName()));
-        for (var bookInfo : bookInfos) {
-            if (bookInfo.getAuthorId() == null) continue;
-            var name = nameLookup.get(bookInfo.getAuthorId());
-            if (name != null && name.isBlank()) name = null;
-            bookInfo.setAuthorName(name);
         }
     }
 }

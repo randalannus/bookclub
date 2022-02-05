@@ -1,7 +1,7 @@
 package com.randal_annus.bookclub.web;
 
-import com.randal_annus.bookclub.business.model.BookInfo;
 import com.randal_annus.bookclub.business.service.LiteratureService;
+import com.randal_annus.bookclub.data.entity.Book;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,12 +17,12 @@ public class BookController {
     }
 
     @GetMapping("/books")
-    public List<BookInfo> getBooks() {
+    public Iterable<Book> getBooks() {
         return literatureService.findAllBooks();
     }
 
     @GetMapping("/books/{bookId}")
-    public ResponseEntity<BookInfo> getBook(@PathVariable long bookId) {
+    public ResponseEntity<Book> getBook(@PathVariable long bookId) {
         try {
             return ResponseEntity.ok(literatureService.findBookById(bookId));
         } catch (NoSuchElementException e) {
@@ -31,21 +31,21 @@ public class BookController {
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookInfo> createBook(@RequestBody BookInfo bookInfo) {
-        bookInfo = literatureService.createBook(bookInfo);
-        return ResponseEntity.ok(bookInfo);
+    public ResponseEntity<Book> createBook(@RequestBody Book book) {
+        literatureService.createBook(book);
+        return ResponseEntity.ok(book);
     }
 
     @PutMapping("/books")
-    public ResponseEntity<BookInfo> updateBook(@RequestBody BookInfo bookInfo) {
+    public ResponseEntity<Book> updateBook(@RequestBody Book book) {
         try {
-            literatureService.updateBook(bookInfo);
+            literatureService.updateBook(book);
         } catch (NoSuchElementException e) {
             return ResponseEntity.notFound().build();
         } catch (java.lang.IllegalArgumentException e) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(bookInfo);
+        return ResponseEntity.ok(book);
     }
 
     @DeleteMapping("books/{bookId}")
