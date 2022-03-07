@@ -20,5 +20,5 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Color pallette
+https://coolors.co/363732-fdfffc-2ec4b6-e71d36-ff9f1c
